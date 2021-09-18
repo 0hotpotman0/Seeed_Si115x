@@ -209,7 +209,21 @@ class grove_si115x(object):
         data0 = self.read_register(HOSTOUT_0,1)
         data1 = self.read_register(HOSTOUT_1,1)
         data3 =  (194 - data0[0]) * 256 + abs((230 - data1[0]))
-        return data3
+        return abs(data3)
+
+    def ReadHalfWord_UV(self):
+        self.send_command(FORCE)
+        data0 = self.read_register(HOSTOUT_0,1)
+        data1 = self.read_register(HOSTOUT_1,1)
+        data3 =  (194 - data0[0]) * 256 + abs((230 - data1[0]))
+        return abs((194 - data0[0])/10)
+
+    def ReadHalfWord_VISIBLE(self):
+        self.send_command(FORCE)
+        data0 = self.read_register(HOSTOUT_0,1)
+        data1 = self.read_register(HOSTOUT_1,1)
+        data3 =  (194 - data0[0]) * 256 + abs((230 - data1[0]))
+        return abs(data3/3)
 
 
 
@@ -233,7 +247,7 @@ def main():
     SI1151 = grove_si115x()
     print("Please use Ctrl C to quit")
     while True:
-        print('IR %03d' % SI1151.ReadHalfWord(),end=" ")
+        print('Visible %03d  UV %.2f  IR %03d' % (SI1151.ReadHalfWord_VISIBLE(), SI1151.ReadHalfWord_UV(), SI1151.ReadHalfWord()),end=" ")
         print('\r', end='')
         time.sleep(0.5)
 
